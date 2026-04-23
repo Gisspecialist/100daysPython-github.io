@@ -1,0 +1,67 @@
+CODING NOTEBOOK SHEETS APP - USER MANUAL
+
+1. OVERVIEW
+This app turns the uploaded coding notebook sheet into a digital notebook. You can enter code on numbered lines, save multiple sheets, edit existing sheets, delete sheets, export them to JSON, import them back later, and run Python code directly inside the interface.
+
+2. MAIN AREAS
+A. Stored Sheets panel
+- Shows every saved sheet
+- Lets you search by concept, filename, day, or summary text
+- Click any sheet to open it
+
+B. Data Storage panel
+- Export JSON: saves all sheets to one JSON backup file
+- Import JSON: restores sheets from a previous export
+- Download Current Sheet JSON: saves only the active sheet
+- Duplicate Current Sheet: clones the sheet for reuse
+
+C. Python Runner panel
+- Load 01–18 into Runner: moves the code lines from the notebook into the runner
+- Run Python: executes the code in the browser
+- Clear Output: clears the output box
+
+D. Sheet workspace
+- Concept: topic of the lesson or code exercise
+- Day: day number
+- Filename: script or notebook filename
+- Code lines 01–18: line-by-line code entry
+- #Comments: notes about the code or lesson
+- Summary: what the code or concept does
+- Lecture: lecture title, source, or reference
+
+3. CRUD OPERATIONS
+Create
+- Click New Sheet
+- Fill in the fields
+- Save manually or rely on autosave
+
+Read
+- Select a saved sheet from the left panel
+
+Update
+- Edit any field
+- Save automatically if autosave is on, or click Save Sheet
+
+Delete
+- Open a sheet
+- Click Delete Sheet
+
+4. STORAGE MODEL
+The app stores data in two ways:
+- Browser local storage for instant reuse on the same device/browser
+- JSON export files for backup and transfer
+
+5. RUNNING PYTHON
+- Enter code on the 18 numbered lines
+- Click Load 01–18 into Runner
+- Click Run Python
+- See results in the output area
+
+6. BEST PRACTICES
+- Export JSON periodically for backup
+- Use one sheet per concept or lesson
+- Keep filenames consistent with your project files
+- Use comments and summary fields to make the notebook searchable
+
+7. TECHNICAL NOTE
+Python is run using Pyodide in the browser. If the runtime does not load, check internet access and refresh the page.

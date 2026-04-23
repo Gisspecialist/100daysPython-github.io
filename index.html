@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coding Notebook Sheets App</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>100 Days PYTHON: Coding Notebook Sheets App</h1>
+      <p>Notebook-style coding sheets inspired by Dr. Angela Yu 100 Days of Python Udemy course notebook PDF template.</p>
+    </div>
+    <div class="topbar-actions">
+      <button id="prevSheetBtn">◀ Previous Sheet</button>
+      <button id="nextSheetBtn">Next Sheet ▶</button>
+      <button id="newEntryBtn">New Sheet for Selected Day</button>
+      <button id="saveEntryBtn" class="primary">Save Sheet</button>
+      <button id="deleteEntryBtn" class="danger">Delete Sheet</button>
+    </div>
+  </header>
+<style type="text/css">  .comments-title label {
+  color: black;
+}</style>
+
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Days and Stored Sheets</h2>
+        <div class="toolbar compact stack-gap">
+          <label class="field-label">
+            Select Day
+            <select id="daySelect"></select>
+          </label>
+          <div class="mini-actions">
+            <button id="addDayBtn">Add Day</button>
+            <button id="goToDayBtn">Go to Day</button>
+          </div>
+          <input type="text" id="searchInput" placeholder="Search concept / filename / day / sheet" />
+        </div>
+        <div id="sheetList" class="sheet-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Data Storage</h2>
+        <div class="toolbar stacked">
+          <button id="exportBtn">Export Full Notebook JSON</button>
+          <label class="file-btn">
+            Import JSON
+            <input type="file" id="importInput" accept="application/json" hidden />
+          </label>
+          <button id="downloadCurrentBtn">Download Current Sheet JSON</button>
+          <button id="duplicateBtn">Duplicate Current Sheet</button>
+        </div>
+        <p class="hint">All days and all sheets stay together in one notebook JSON file.</p>
+        <div class="donation-callout" aria-label="Support message">
+          <h3>Support My WGU Journey</h3>
+          <p>I am currently unemployed and working hard to complete my bachelor's degree at WGU. If this application has been helpful and you are in a position to contribute, even a small donation of $2.00 or $5.00 would make a meaningful difference toward tuition, course materials, and helping me stay on track with my studies. Your support is sincerely appreciated. Thank you for your kindness and encouragement.</p>
+          <div class="support-details">
+            <div><strong>Name:</strong> Alain Curtis Robinson</div>
+            <div><strong>Bank:</strong> BFSFCU</div>
+            <div><strong>Account #:</strong> 10221456</div>
+            <div><strong>Routing Number:</strong> 254074170</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <div class="sheet-controls">
+        <label>
+          Theme
+          <select id="themeSelect">
+            <option value="green">Green</option>
+            <option value="purple">Purple</option>
+          </select>
+        </label>
+        <label>
+          Autosave
+          <input type="checkbox" id="autosaveToggle" checked />
+        </label>
+        <span id="sheetNavigatorStatus" class="day-status">Day 1 · Sheet 1</span>
+        <span id="saveStatus" class="save-status">Ready.</span>
+      </div>
+
+      <section id="sheet" class="sheet theme-green">
+        <div class="sheet-main">
+          <div class="sheet-header-row">
+            <div class="left-meta concept-row">
+              <label>Concept:</label>
+              <input id="conceptInput" type="text" placeholder="Enter concept" />
+            </div>
+            <div class="branding">100 DAYS<br/>OF PYTHON</div>
+            <div class="day-box">
+              <label>Day:</label>
+              <input id="dayInput" type="text" placeholder="e.g. 12" />
+            </div>
+          </div>
+
+          <div class="sheet-header-row second">
+            <div class="filename-row">
+              <label>Filename:</label>
+              <input id="filenameInput" type="text" placeholder="script.py" />
+            </div>
+            <div class="comments-title" aria-label="Comments heading"><label>Notes and #Comments</label></div>
+          </div>
+
+          <div class="grid-wrap">
+            <div class="code-grid" id="codeGrid"></div>
+            <div class="comments-col">
+              <textarea id="commentsInput" placeholder="Notes and comments..."></textarea>
+            </div>
+          </div>
+
+          <div class="bottom-row">
+            <div class="summary-box">
+              <label>Summary:</label>
+              <textarea id="summaryInput" placeholder="Summarize the lesson or code."></textarea>
+            </div>
+            <div class="lecture-box">
+              <label>Lecture:</label>
+              <textarea id="lectureInput" placeholder="Lecture title, source, or link."></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel runner-panel-main">
+        <div class="runner-panel-header">
+          <div>
+            <h2>Python Runner</h2>
+            <p class="hint">Type code directly, load lines 01–18 from the sheet, then run and review the output below.</p>
+          </div>
+          <div class="toolbar runner-toolbar">
+            <button id="loadLinesBtn">Load 01–18 into Runner</button>
+            <button id="runCodeBtn" class="primary">Run Python</button>
+            <button id="clearInputBtn">Clear Input</button>
+            <button id="clearOutputBtn">Clear Output</button>
+          </div>
+        </div>
+        <div id="runtimeStatus" class="status">Pyodide not loaded yet.</div>
+        <div class="runner-main-grid">
+          <section class="runner-block">
+            <label for="runnerCode">Input</label>
+            <textarea id="runnerCode" class="runner-code" placeholder="Python code will appear here or you can type your own."></textarea>
+          </section>
+          <section class="runner-block">
+            <label for="runnerOutput">Output</label>
+            <pre id="runnerOutput" class="runner-output">Output will appear here.</pre>
+          </section>
+        </div>
+      </section>
+
+    </section>
+  </main>
+</body>
+</html>
