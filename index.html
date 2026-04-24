@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coding Notebook Sheets App</title>
   <link rel="stylesheet" href="styles.css" />
-  <script defer src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -25,8 +25,6 @@
 <style type="text/css">  .comments-title label {
   color: black;
 }</style>
-
-
   <main class="layout">
     <aside class="sidebar">
       <section class="panel">
@@ -67,6 +65,48 @@
             <div><strong>Routing Number:</strong> 254074170</div>
           </div>
         </div>
+
+        <section class="help-guide-panel" aria-label="Embedded Help and User Guide">
+          <div class="help-header">
+            <div>
+              <h3>Help / User Guide</h3>
+              <p>Search, expand sections, load examples, or start a guided walkthrough.</p>
+            </div>
+            <button id="toggleHelpBtn" type="button" aria-expanded="true">Collapse</button>
+          </div>
+          <div id="helpBody" class="help-body">
+            <input id="helpSearch" class="help-search" type="search" placeholder="Search help topics..." aria-label="Search help topics" />
+            <div class="help-actions-row">
+              <button id="startTourBtn" type="button">Start Guided Walkthrough</button>
+              <button id="expandAllHelpBtn" type="button">Expand All</button>
+              <button id="collapseAllHelpBtn" type="button">Collapse All</button>
+            </div>
+            <article class="help-topic open" data-help-topic="overview getting started notebook days sheets">
+              <button class="help-topic-title" type="button">Overview and Getting Started</button>
+              <div class="help-topic-content"><p>This app organizes Python lessons by day and by sheet. Each sheet includes Concept, Day, Filename, 18 numbered code lines, Comments, Summary, and Lecture.</p><ol><li>Select or add a day.</li><li>Create one or more sheets for that day.</li><li>Enter code in lines 01–18.</li><li>Load the code into the runner and run it.</li><li>Export the full notebook JSON for backup.</li></ol></div>
+            </article>
+            <article class="help-topic" data-help-topic="day selector multiple sheets navigation previous next">
+              <button class="help-topic-title" type="button">Days, Multiple Sheets, and Navigation</button>
+              <div class="help-topic-content"><p>Use Select Day to switch days. Use New Sheet for Selected Day to create another sheet under the same day. Previous Sheet and Next Sheet move between sheets for the selected day.</p></div>
+            </article>
+            <article class="help-topic" data-help-topic="storage json save import export backup localstorage">
+              <button class="help-topic-title" type="button">Saving, JSON Storage, Import, and Export</button>
+              <div class="help-topic-content"><p>Autosave stores your notebook in browser local storage. Export Full Notebook JSON downloads one file containing all days and sheets. Import JSON restores a saved notebook file.</p></div>
+            </article>
+            <article class="help-topic" data-help-topic="python runner pyodide terminal input no popup online style">
+              <button class="help-topic-title" type="button">Python Runner and Terminal Input</button>
+              <div class="help-topic-content"><p>The runner uses Pyodide in the browser and shows an online-style transcript: Run started, Initializing environment, Installing packages, Running code, and then your output.</p><p>When code uses <code>input()</code>, answer directly in the Output panel and press Enter. No popup prompt is used.</p></div>
+            </article>
+            <article class="help-topic" data-help-topic="examples band name calculator loop print input">
+              <button class="help-topic-title" type="button">Live Examples</button>
+              <div class="help-topic-content"><p>Click an example to load it into the Python Runner.</p><div class="example-buttons"><button class="load-example-btn" type="button" data-example="band">Band Name Generator</button><button class="load-example-btn" type="button" data-example="calculator">Simple Calculator</button><button class="load-example-btn" type="button" data-example="loop">Loop Practice</button></div></div>
+            </article>
+            <article class="help-topic" data-help-topic="troubleshooting errors pyodide packages refresh browser">
+              <button class="help-topic-title" type="button">Troubleshooting</button>
+              <div class="help-topic-content"><ul><li>If Pyodide is not ready, wait for the runtime status to say it is ready.</li><li>If packages fail to install, check the package name and internet connection.</li><li>If code does not run, check the terminal output for the Python traceback.</li><li>Export JSON regularly so your notebook has a backup copy.</li></ul></div>
+            </article>
+          </div>
+        </section>
       </section>
     </aside>
 
@@ -129,28 +169,50 @@
         </div>
       </section>
 
-      <section class="panel runner-panel-main">
+      <section class="panel runner-panel-main online-pyodide-runner">
         <div class="runner-panel-header">
           <div>
-            <h2>Python Runner</h2>
-            <p class="hint">Type code directly, load lines 01–18 from the sheet, then run and review the output below.</p>
+            <h2>Python Runner — Online-Python Pyodide Style</h2>
+            <p class="hint">Run Python in the browser with Pyodide/WebAssembly, manage packages with micropip, copy or download code, and open the Online-Python Pyodide platform when you want an external IDE workspace.</p>
           </div>
           <div class="toolbar runner-toolbar">
             <button id="loadLinesBtn">Load 01–18 into Runner</button>
             <button id="runCodeBtn" class="primary">Run Python</button>
+            <button id="copyRunnerBtn">Copy Code</button>
+            <button id="downloadPyBtn">Download main.py</button>
+            <button id="openPyodideBtn">Open Online-Python Pyodide</button>
             <button id="clearInputBtn">Clear Input</button>
             <button id="clearOutputBtn">Clear Output</button>
           </div>
         </div>
+
+        <div class="runner-feature-strip">
+          <span>Browser-based execution</span>
+          <span>Pyodide/WebAssembly</span>
+          <span>micropip packages</span>
+          <span>Ctrl + Enter run</span>
+          <span>input() answers typed directly in Output</span>
+        </div>
+
+        <div class="runner-package-row">
+          <label for="packageInput">Install package</label>
+          <input id="packageInput" type="text" placeholder="Example: numpy, pandas, matplotlib" />
+          <button id="installPackageBtn">Install with micropip</button>
+          <label class="file-btn small-file-btn">
+            Open .py File
+            <input type="file" id="openPyFileInput" accept=".py,text/x-python,text/plain" hidden />
+          </label>
+        </div>
+
         <div id="runtimeStatus" class="status">Pyodide not loaded yet.</div>
         <div class="runner-main-grid">
           <section class="runner-block">
             <label for="runnerCode">Input</label>
-            <textarea id="runnerCode" class="runner-code" placeholder="Python code will appear here or you can type your own."></textarea>
+            <textarea id="runnerCode" class="runner-code" placeholder="Python code will appear here or you can type your own. Press Ctrl + Enter to run."></textarea>
           </section>
           <section class="runner-block">
             <label for="runnerOutput">Output</label>
-            <pre id="runnerOutput" class="runner-output">Output will appear here.</pre>
+            <div id="runnerOutput" class="runner-output" role="log" aria-live="polite">Output will appear here.</div>
           </section>
         </div>
       </section>

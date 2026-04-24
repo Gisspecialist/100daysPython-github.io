@@ -27,3 +27,14 @@ This application recreates the feel of the uploaded coding notebook PDF as a wor
 ## Notes
 - Browser storage is local to the browser profile unless you export the JSON.
 - Python execution requires an internet connection the first time so Pyodide can load from CDN.
+
+
+## Python Runner Update
+This version includes an Online-Python Pyodide-style runner: browser-based Pyodide/WebAssembly execution, Ctrl+Enter run shortcut, input() prompt support, package installation with micropip, opening .py files, copying code, downloading main.py, and a button that opens https://www.online-python.com/pyodide for an external IDE workspace.
+
+
+## Online-style runner response
+The Python Runner now displays progress messages similar to the Online-Python execution panel: Run started, Initializing environment, Installing packages, Running code, followed by Python output or traceback errors.
+
+## Runner update: terminal-style input
+The Python Runner no longer uses browser pop-up prompts for `input()`. When a program reaches an `input()` question, the question appears directly in the Output/Terminal area and a small inline answer field appears beside it. Type the answer there and press Enter to continue the run.

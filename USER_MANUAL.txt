@@ -1,67 +1,86 @@
-CODING NOTEBOOK SHEETS APP - USER MANUAL
+Coding Notebook Sheets App — Upgraded User Manual
+=================================================
 
-1. OVERVIEW
-This app turns the uploaded coding notebook sheet into a digital notebook. You can enter code on numbered lines, save multiple sheets, edit existing sheets, delete sheets, export them to JSON, import them back later, and run Python code directly inside the interface.
+Version: Terminal Input Runner + Embedded Help Upgrade
 
-2. MAIN AREAS
-A. Stored Sheets panel
-- Shows every saved sheet
-- Lets you search by concept, filename, day, or summary text
-- Click any sheet to open it
+1. Overview
+-----------
+This application is a browser-based Python coding notebook inspired by the 100 Days of Python sheet layout. It lets you create coding sheets by day, keep multiple sheets under the same day, save all notebook data in one JSON file, and run Python code in a terminal-style runner.
 
-B. Data Storage panel
-- Export JSON: saves all sheets to one JSON backup file
-- Import JSON: restores sheets from a previous export
-- Download Current Sheet JSON: saves only the active sheet
-- Duplicate Current Sheet: clones the sheet for reuse
+2. Main Upgrades in This Version
+--------------------------------
+- Embedded Help / User Guide panel below the Support My WGU Journey section.
+- Searchable help topics.
+- Collapsible help sections.
+- Expand All and Collapse All buttons.
+- Guided Walkthrough mode.
+- Live runnable examples that load directly into the Python Runner.
+- Terminal-style input handling: input() questions are answered in the Output panel, not popups.
 
-C. Python Runner panel
-- Load 01–18 into Runner: moves the code lines from the notebook into the runner
-- Run Python: executes the code in the browser
-- Clear Output: clears the output box
+3. Days and Sheets
+------------------
+Use the Select Day dropdown to choose the day you want to work on. Use Add Day to create a new day. Use New Sheet for Selected Day to create multiple sheets under the same day. Previous Sheet and Next Sheet move between sheets for the currently selected day.
 
-D. Sheet workspace
-- Concept: topic of the lesson or code exercise
-- Day: day number
-- Filename: script or notebook filename
-- Code lines 01–18: line-by-line code entry
-- #Comments: notes about the code or lesson
-- Summary: what the code or concept does
-- Lecture: lecture title, source, or reference
+4. Sheet Fields
+---------------
+Each sheet includes:
+- Concept
+- Day
+- Filename
+- Code lines 01–18
+- Comments
+- Summary
+- Lecture
 
-3. CRUD OPERATIONS
-Create
-- Click New Sheet
-- Fill in the fields
-- Save manually or rely on autosave
+5. Running Python
+-----------------
+Click Load 01–18 into Runner to move the sheet code into the runner input panel. Click Run Python to execute the code.
 
-Read
-- Select a saved sheet from the left panel
+The runner prints an online-style transcript:
+- Run started
+- Initializing environment
+- Installing packages
+- Running code
+- Your Python output
+- Code completed successfully or error details
 
-Update
-- Edit any field
-- Save automatically if autosave is on, or click Save Sheet
+6. Answering input() Questions
+------------------------------
+When your code uses input(), the prompt appears in the Output area. Type your answer directly beside the prompt and press Enter. This replaces popup prompts and behaves more like an online Python terminal.
 
-Delete
-- Open a sheet
-- Click Delete Sheet
+7. Installing Packages
+----------------------
+Enter package names in the Install package box, separated by commas, then click Install with micropip. Packages require the Pyodide runtime and internet access.
 
-4. STORAGE MODEL
-The app stores data in two ways:
-- Browser local storage for instant reuse on the same device/browser
-- JSON export files for backup and transfer
+8. JSON Storage
+---------------
+Autosave stores your work in the browser. Export Full Notebook JSON downloads one file containing all days and all sheets. Import JSON restores a previous notebook.
 
-5. RUNNING PYTHON
-- Enter code on the 18 numbered lines
-- Click Load 01–18 into Runner
-- Click Run Python
-- See results in the output area
+9. Embedded Help / User Guide
+-----------------------------
+The Help / User Guide panel is below the Support My WGU Journey container. It includes:
+- Overview and getting started
+- Days, multiple sheets, and navigation
+- Saving and JSON storage
+- Python runner and terminal input
+- Live examples
+- Troubleshooting
 
-6. BEST PRACTICES
-- Export JSON periodically for backup
-- Use one sheet per concept or lesson
-- Keep filenames consistent with your project files
-- Use comments and summary fields to make the notebook searchable
+Use the search box to filter help topics. Use Expand All or Collapse All to manage the panel. Use Start Guided Walkthrough to learn the app step by step.
 
-7. TECHNICAL NOTE
-Python is run using Pyodide in the browser. If the runtime does not load, check internet access and refresh the page.
+10. Live Examples
+-----------------
+The Live Examples section can load sample code into the runner:
+- Band Name Generator
+- Simple Calculator
+- Loop Practice
+
+After loading an example, click Run Python to test it.
+
+11. Best Practices
+------------------
+- Use one concept per sheet.
+- Keep each day's work grouped under that day.
+- Use multiple sheets when a lesson has more than one code example.
+- Export the full JSON notebook regularly.
+- Check the Python output panel for tracebacks when debugging.
