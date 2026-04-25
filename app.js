@@ -518,13 +518,20 @@ function exportCurrentToJson() {
 }
 
 function downloadJson(payload, filename) {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  downloadBlob(JSON.stringify(payload, null, 2), filename, 'application/json;charset=utf-8');
+}
+
+function downloadBlob(content, filename, mimeType = 'application/octet-stream') {
+  const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 async function importJsonFile(event) {
@@ -803,11 +810,21 @@ async function copyRunnerCode() {
 }
 
 function downloadRunnerPy() {
-  const code = els.runnerCode.value || '';
-  const rawName = (els.filenameInput.value || 'main.py').trim().replace(/[^a-zA-Z0-9_.-]/g, '_') || 'main.py';
-  const name = rawName.endsWith('.py') ? rawName : `${rawName}.py`;
-  downloadBlob(code, name, 'text/x-python');
-  els.runnerOutput.textContent = `Downloaded ${name}.`;
+  const code = els.runnerCode?.value || '';
+  const rawName = (els.filenameInput?.value || 'main.py').trim().replace(/[^a-zA-Z0-9_.-]/g, '_') || 'main.py';
+  const name = rawName.toLowerCase().endsWith('.py') ? rawName : `${rawName}.py`;
+
+  try {
+    downloadBlob(code, name, 'text/x-python;charset=utf-8');
+    if (els.runnerOutput) {
+      els.runnerOutput.textContent = `Downloaded ${name}. Check your browser Downloads folder.`;
+    }
+  } catch (err) {
+    if (els.runnerOutput) {
+      els.runnerOutput.textContent = `Download failed: ${err.message}`;
+    }
+    console.error('Download main.py failed:', err);
+  }
 }
 
 async function openPythonFile(event) {
