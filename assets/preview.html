@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donation Preview</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body style="background:#f3f3f7; padding:18px;">
+  <section class="panel donation-panel" aria-labelledby="donationPanelTitle">
+    <h2 id="donationPanelTitle">Support My WGU Journey</h2>
+    <p class="donation-intro">I am currently working hard to complete my bachelor's degree at WGU. If this application has been helpful and you are in a position to contribute, even a small donation of $2.00 or $5.00 would make a meaningful difference toward tuition, course materials, and helping me stay on track with my studies.</p>
+    <a class="donation-btn card-btn" href="https://buy.stripe.com/28EaEYcUre6r0M06HTds400" target="_blank" rel="noopener noreferrer">Donate by Visa / Credit Card</a>
+    <button class="donation-btn zelle-btn" id="toggleZelleBtn" type="button" aria-expanded="false" aria-controls="zelleDonationBox">Donate with Zelle</button>
+    <div id="zelleDonationBox" class="zelle-box" hidden>
+      <h3>Zelle Donation Instructions</h3>
+      <p>Open your bank app, choose <strong>Zelle</strong>, and send your donation to:</p>
+      <p class="zelle-recipient"><strong>Name:</strong> Alain Curtis Robinson<br><strong>Zelle Email:</strong> arobby1971@gmail.com</p>
+      <img src="ACR_Zelle.png" alt="Zelle QR Code for Alain Curtis Robinson" class="zelle-qr" />
+      <p class="security-note">For security, confirm the recipient name before sending. Do not publish bank account or routing numbers on a public webpage.</p>
+      <p class="donation-memo">Suggested memo: <strong>Donation Support</strong></p>
+    </div>
+  </section>
+  <script>
+    const toggleBtn = document.getElementById('toggleZelleBtn');
+    const zelleBox = document.getElementById('zelleDonationBox');
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = zelleBox.hasAttribute('hidden');
+      zelleBox.toggleAttribute('hidden', !isHidden);
+      toggleBtn.setAttribute('aria-expanded', String(isHidden));
+    });
+  </script>
+</body>
+</html>

@@ -199,7 +199,8 @@ button:hover, .file-btn:hover { filter: brightness(0.98); }
   background: transparent;
   outline: none;
   font-size: 1.05rem;
-  color: #5b6770;
+  color: #24313a;
+  font-weight: 600;
 }
 
 .filename-row {
@@ -267,7 +268,8 @@ button:hover, .file-btn:hover { filter: brightness(0.98); }
   padding: 0 14px 0 58px;
   font-family: Consolas, monospace;
   font-size: 1rem;
-  color: #5b6770;
+  color: #24313a;
+  font-weight: 600;
 }
 .line-number {
   position: absolute;
@@ -602,4 +604,85 @@ button:hover, .file-btn:hover { filter: brightness(0.98); }
   border-radius: 12px;
   position: relative;
   z-index: 1001;
+}
+
+/* Donation buttons integrated from preview.html while preserving original sidebar layout */
+.donation-panel {
+  background: linear-gradient(180deg, #fffaf0 0%, #fff4dc 100%);
+}
+.donation-intro {
+  margin-bottom: 12px !important;
+}
+.donation-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.card-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+.card-btn:hover {
+  background: #1d4ed8;
+}
+.zelle-btn {
+  background: #6d1ed4;
+  color: #ffffff;
+}
+.zelle-btn:hover {
+  background: #5b16b8;
+}
+.zelle-box {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f7f2ff;
+  border: 1px solid #ddd6fe;
+  text-align: left;
+}
+.zelle-box[hidden] {
+  display: none !important;
+}
+.zelle-box h4 {
+  margin: 0 0 8px;
+  color: #2f1967;
+}
+.zelle-box p {
+  margin: 8px 0;
+}
+.zelle-recipient {
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  color: #111827 !important;
+  border: 1px solid rgba(109, 30, 212, 0.16);
+}
+.zelle-qr {
+  display: block;
+  max-width: 190px;
+  width: 100%;
+  margin: 12px auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+}
+.security-note {
+  font-size: 0.86rem !important;
+  color: #92400e !important;
+  background: #fffbeb;
+  padding: 10px;
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+}
+.donation-memo {
+  font-size: 0.9rem !important;
 }

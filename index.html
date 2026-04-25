@@ -55,14 +55,21 @@
           <button id="duplicateBtn">Duplicate Current Sheet</button>
         </div>
         <p class="hint">All days and all sheets stay together in one notebook JSON file.</p>
-        <div class="donation-callout" aria-label="Support message">
+        <div class="donation-callout donation-panel" aria-label="Support My WGU Journey donation options">
           <h3>Support My WGU Journey</h3>
-          <p>I am currently unemployed and working hard to complete my bachelor's degree at WGU. If this application has been helpful and you are in a position to contribute, even a small donation of $2.00 or $5.00 would make a meaningful difference toward tuition, course materials, and helping me stay on track with my studies. Your support is sincerely appreciated. Thank you for your kindness and encouragement.</p>
-          <div class="support-details">
-            <div><strong>Name:</strong> Alain Curtis Robinson</div>
-            <div><strong>Bank:</strong> BFSFCU</div>
-            <div><strong>Account #:</strong> 10221456</div>
-            <div><strong>Routing Number:</strong> 254074170</div>
+          <p class="donation-intro">I am currently working hard to complete my bachelor's degree at WGU. If this application has been helpful and you are in a position to contribute, even a small donation of $2.00 or $5.00 would make a meaningful difference toward tuition, course materials, and helping me stay on track with my studies.</p>
+
+          <a class="donation-btn card-btn" href="https://buy.stripe.com/28EaEYcUre6r0M06HTds400" target="_blank" rel="noopener noreferrer">Donate by Visa / Credit Card</a>
+
+          <button class="donation-btn zelle-btn" id="toggleZelleBtn" type="button" aria-expanded="false" aria-controls="zelleDonationBox">Donate with Zelle</button>
+
+          <div id="zelleDonationBox" class="zelle-box" hidden>
+            <h4>Zelle Donation Instructions</h4>
+            <p>Open your bank app, choose <strong>Zelle</strong>, and send your donation to:</p>
+            <p class="zelle-recipient"><strong>Name:</strong> Alain Curtis Robinson<br><strong>Zelle Email:</strong> arobby1971@gmail.com</p>
+            <img src="assets/ACR_Zelle.png" alt="Zelle QR Code for Alain Curtis Robinson" class="zelle-qr" />
+            <p class="security-note">For security, confirm the recipient name before sending. Do not publish bank account or routing numbers on a public webpage.</p>
+            <p class="donation-memo">Suggested memo: <strong>Donation Support</strong></p>
           </div>
         </div>
 
@@ -219,5 +226,19 @@
 
     </section>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggleZelleBtn');
+      const zelleBox = document.getElementById('zelleDonationBox');
+      if (!toggleBtn || !zelleBox) return;
+
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = zelleBox.hasAttribute('hidden');
+        zelleBox.toggleAttribute('hidden', !isHidden);
+        toggleBtn.setAttribute('aria-expanded', String(isHidden));
+      });
+    });
+  </script>
+
 </body>
 </html>
