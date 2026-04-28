@@ -618,14 +618,19 @@ function appendInlinePrompt(text = '') {
   appendRunnerText(String(text ?? ''), false);
 }
 
-function appendTerminalInputAndWait() {
+function appendTerminalInputAndWait(promptText = '') {
   return new Promise(resolve => {
+    const prompt = String(promptText ?? '');
+    if (prompt) appendInlinePrompt(prompt);
+
     const input = document.createElement('input');
     input.className = 'terminal-answer-input';
     input.type = 'text';
     input.autocomplete = 'off';
     input.spellcheck = false;
+    input.placeholder = 'type answer, press Enter';
     input.setAttribute('aria-label', 'Python input answer');
+
     els.runnerOutput.appendChild(input);
     els.runnerOutput.scrollTop = els.runnerOutput.scrollHeight;
     input.focus();
@@ -642,46 +647,83 @@ function appendTerminalInputAndWait() {
   });
 }
 
-function pythonStringLiteral(value) {
-  return JSON.stringify(String(value ?? ''));
-}
-
-function findInputCall(line) {
-  const start = line.indexOf('input(');
-  if (start === -1) return null;
-  let depth = 0;
+function transformInputCallsForAsyncPython(source) {
+  let out = '';
+  let i = 0;
   let quote = null;
   let escape = false;
-  for (let i = start + 'input'.length; i < line.length; i++) {
-    const ch = line[i];
-    if (quote) {
-      if (escape) { escape = false; continue; }
-      if (ch === '\\') { escape = true; continue; }
-      if (ch === quote) quote = null;
+  let comment = false;
+
+  while (i < source.length) {
+    const ch = source[i];
+
+    if (comment) {
+      out += ch;
+      if (ch === '\n') comment = false;
+      i += 1;
       continue;
     }
-    if (ch === '"' || ch === "'") { quote = ch; continue; }
-    if (ch === '(') depth += 1;
-    if (ch === ')') {
-      depth -= 1;
-      if (depth === 0) {
-        return { start, end: i + 1, expression: line.slice(start, i + 1), args: line.slice(start + 6, i) };
+
+    if (quote) {
+      out += ch;
+      if (escape) escape = false;
+      else if (ch === '\\') escape = true;
+      else if (ch === quote) quote = null;
+      i += 1;
+      continue;
+    }
+
+    if (ch === '#') {
+      comment = true;
+      out += ch;
+      i += 1;
+      continue;
+    }
+
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      out += ch;
+      i += 1;
+      continue;
+    }
+
+    const previous = i > 0 ? source[i - 1] : '';
+    const isNameBefore = /[A-Za-z0-9_]/.test(previous);
+    if (!isNameBefore && source.slice(i, i + 6) === 'input(') {
+      let j = i + 5;
+      let depth = 0;
+      let innerQuote = null;
+      let innerEscape = false;
+      for (; j < source.length; j++) {
+        const c = source[j];
+        if (innerQuote) {
+          if (innerEscape) innerEscape = false;
+          else if (c === '\\') innerEscape = true;
+          else if (c === innerQuote) innerQuote = null;
+          continue;
+        }
+        if (c === '"' || c === "'") {
+          innerQuote = c;
+          continue;
+        }
+        if (c === '(') depth += 1;
+        if (c === ')') {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+      }
+      if (j < source.length) {
+        const args = source.slice(i + 6, j);
+        out += `(await __terminal_input(${args}))`;
+        i = j + 1;
+        continue;
       }
     }
-  }
-  return null;
-}
 
-async function evaluatePromptText(args) {
-  const trimmed = String(args ?? '').trim();
-  if (!trimmed) return '';
-  try {
-    const promptValue = await state.pyodide.runPythonAsync(`str(${trimmed})`);
-    return String(promptValue ?? '');
-  } catch (_) {
-    // Fallback for normal quoted prompts if the expression cannot be evaluated.
-    return trimmed.replace(/^['"]|['"]$/g, '');
+    out += ch;
+    i += 1;
   }
+  return out;
 }
 
 function formatPyodideError(err) {
@@ -690,41 +732,21 @@ function formatPyodideError(err) {
   return `PythonError: ${raw}`;
 }
 
-async function runPythonChunk(chunk) {
-  const code = chunk.join('\n').trimEnd();
-  if (!code.trim()) return;
-  const result = await state.pyodide.runPythonAsync(code);
-  if (result !== undefined && result !== null) appendOutput(String(result));
-}
-
 async function runPythonWithTerminalInput(code) {
-  const lines = code.split(/\r?\n/);
-  let chunk = [];
+  window.__pyodideTerminalInput = async (promptText = '') => {
+    return await appendTerminalInputAndWait(promptText);
+  };
 
-  for (let originalLine of lines) {
-    let lineToRun = originalLine;
-    let inputCall = findInputCall(lineToRun);
+  const transformedUserCode = transformInputCallsForAsyncPython(code);
+  const wrappedCode = `from js import __pyodideTerminalInput
 
-    if (!inputCall) {
-      chunk.push(originalLine);
-      continue;
-    }
+async def __terminal_input(prompt=""):
+    return await __pyodideTerminalInput(str(prompt))
 
-    await runPythonChunk(chunk);
-    chunk = [];
+${transformedUserCode}`;
 
-    while (inputCall) {
-      const promptText = await evaluatePromptText(inputCall.args);
-      appendInlinePrompt(promptText);
-      const answer = await appendTerminalInputAndWait();
-      lineToRun = lineToRun.slice(0, inputCall.start) + pythonStringLiteral(answer) + lineToRun.slice(inputCall.end);
-      inputCall = findInputCall(lineToRun);
-    }
-
-    await runPythonChunk([lineToRun]);
-  }
-
-  await runPythonChunk(chunk);
+  const result = await state.pyodide.runPythonAsync(wrappedCode);
+  if (result !== undefined && result !== null) appendOutput(String(result));
 }
 
 async function installRunnerPackage() {
@@ -781,6 +803,7 @@ async function runPythonCode() {
   }
 
   appendRunnerLine('Running code');
+  appendRunnerLine('When input() asks a question, type your answer in the Output area and press Enter.');
 
   try {
     state.pyodide.setStdout({ batched: text => appendOutput(text) });
